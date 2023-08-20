@@ -19,8 +19,8 @@ resource "aws_route_table" "example" {
 
 resource "aws_route_table_association" "a" {
   for_each       = var.subnets
-  subnet_id      = lookup(aws_subnet.main, each.value["id"], null)
-  route_table_id = lookup(aws_route_table.example, each.value["id"], null)
+  subnet_id      = lookup(aws_subnet.main, each.key["id"], null)
+  route_table_id = lookup(aws_route_table.example, each.key["id"], null)
 }
 
 
