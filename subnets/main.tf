@@ -19,8 +19,8 @@ resource "aws_route_table" "route" {
 
 resource "aws_route_table_association" "a" {
   for_each = var.subnets
-  subnet_id      = aws_subnet.main.id
-  route_table_id = lookup(lookup(aws_route_table,each.value,null ),"id" , null)
+  subnet_id      = lookup(lookup(aws_subnet.main,each.value , null), "id", null)
+  route_table_id = lookup(lookup(aws_route_table.route,each.value,null ),"id" , null)
 #  route_table_id= aws_route_table.route
 }
 
