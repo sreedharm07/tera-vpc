@@ -17,5 +17,12 @@ resource "aws_route_table" "route" {
   }
 }
 
+resource "aws_route_table_association" "a" {
+  for_each = var.subnets
+  subnet_id      = aws_subnet.main.id
+  route_table_id = aws_route_table.route.id
+}
+
+
 variable "vpc_id" {}
 variable "subnets" {}
