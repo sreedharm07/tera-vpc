@@ -8,6 +8,21 @@ resource "aws_subnet" "main" {
   }
 }
 
+resource "aws_route_table" "example" {
+  for_each = var.subnets
+  vpc_id = var.vpc_id
+
+  tags = {
+    Name = "each.key"
+  }
+}
+
+resource "aws_route_table_association" "a" {
+  for_each       = var.subnets
+  subnet_id      = lookup(aws_subnet.main, each.value["id"], null)
+  route_table_id = lookup(aws_route_table.example, each.value["id"], null)
+}
+
 
 variable "vpc_id" {}
 variable "subnets" {}
