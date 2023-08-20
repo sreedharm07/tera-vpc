@@ -16,9 +16,7 @@ resource "aws_route_table" "example" {
   route {
     cidr_block = each.value["cidr"]
 
-    tags = {
-      Name = "each.value"
-    }
+
   }
 }
 
