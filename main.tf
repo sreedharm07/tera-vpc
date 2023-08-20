@@ -8,3 +8,4 @@ module "subnet" {
   for_each = var.subnets
   subnets= each.value
 }
+

@@ -9,5 +9,18 @@ resource "aws_subnet" "main" {
   }
 }
 
+resource "aws_route_table" "example" {
+  vpc_id   = var.vpc_id
+
+  for_each = var.subnets
+  route {
+    cidr_block = each.value["cidr"]
+
+    tags = {
+      Name = "each.value"
+    }
+  }
+}
+
 variable "vpc_id" {}
 variable "subnets" {}
