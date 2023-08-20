@@ -4,7 +4,7 @@ resource "aws_vpc" "main" {
 
 module "subnet" {
   source = "./subnets"
-  vpc_id =aws_vpc.main.id
   for_each = var.subnets
+  vpc_id =aws_vpc.main.id
   subnets= each.value
 }
