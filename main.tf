@@ -34,8 +34,8 @@ resource "aws_eip" "id" {
   domain   = "vpc"
 }
 
-#resource "aws_nat_gateway" "nat" {
-#  for_each = lookup(lookup(module.subnets,"public", null ),"subnets",null)
-#  allocation_id = lookup(aws_eip.id, each.value["id"],null)
-#  subnet_id     = each.value["id"]
-#}
+resource "aws_nat_gateway" "nat" {
+  for_each = lookup(lookup(module.subnets,"public", null ),"subnets",null)
+  allocation_id = lookup(aws_eip.id, each.value["id"],null)
+  subnet_id     = each.value["id"]
+}
