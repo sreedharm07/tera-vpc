@@ -36,6 +36,6 @@ resource "aws_eip" "id" {
 
 resource "aws_nat_gateway" "nat" {
   for_each = lookup(lookup(module.subnets,"public", null ),"subnets",null)
-  allocation_id = lookup(aws_eip.id, each.key["id"],null)
+  allocation_id = lookup(lookup(aws_eip.id, each.key,null),"id",null)
   subnet_id     = each.value["id"]
 }
