@@ -54,4 +54,8 @@ resource "aws_route" "igw" {
   gateway_id = aws_nat_gateway.nat.id
 }
 
+resource "aws_vpc_peering_connection" "foo" {
+  peer_vpc_id   = aws_vpc.vpc.id
+  vpc_id        = var.default_vpc
+}
 
