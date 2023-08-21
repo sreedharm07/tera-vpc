@@ -28,3 +28,13 @@ resource "aws_route" "igw" {
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id = aws_internet_gateway.igw.id
 }
+
+resource "aws_eip" "id" {
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "nat" {
+  for_each = lookup(lookup(module.subnets,"public", null ),"subnets",null)
+  allocation_id = aws_eip.id.id
+  subnet_id     = each.value["id"]
+}
