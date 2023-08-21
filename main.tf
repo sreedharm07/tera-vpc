@@ -24,3 +24,18 @@ for_each =  lookup(lookup(module.subnets,"public",null),"route",null)
   destination_cidr_block    = "0.0.0.0/0"
  gateway_id =  aws_internet_gateway.igw.id
 }
+
+resource "aws_eip" "ngw" {
+  for_each = lookup(lookup(module.subnets,"public",null),"route",null)
+  domain   = "vpc"
+}
+
+resource "aws_nat_gateway" "example" {
+  for_each = lookup(lookup(module.subnets,"public",null),"subnets",null)
+  allocation_id = lookup(lookup(aws_eip.ngw,each.value,null),"id" ,null)
+  subnet_id     = each.value["id"]
+
+  tags = {
+    Name = "gw NAT"
+  }
+}
