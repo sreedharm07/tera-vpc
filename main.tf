@@ -9,3 +9,8 @@ module "subnets" {
   for_each = var.subnets
   subnets=each.value
 }
+
+output "subnets" {
+  value = module.subnets
+}
+
