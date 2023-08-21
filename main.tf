@@ -44,14 +44,14 @@ resource "aws_route" "app" {
   for_each = lookup(lookup(module.subnets,"app",null),"route",null)
   route_table_id            =each.value["id"]
   destination_cidr_block    = "0.0.0.0/0"
-  gateway_id = lookup(lookup(aws_nat_gateway.nat,each.key,null),"id",null)
+  gateway_id = lookup(lookup(aws_nat_gateway.nat,each.value,null),"id",null)
 }
 
 resource "aws_route" "db" {
   for_each = lookup(lookup(module.subnets,"db",null),"route",null)
   route_table_id            =each.value["id"]
   destination_cidr_block    = "0.0.0.0/0"
-  gateway_id =  lookup(lookup(aws_nat_gateway.nat,each.key,null),"id",null)
+  gateway_id =  lookup(lookup(aws_nat_gateway.nat,each.value,null),"id",null)
 }
 
 resource "aws_vpc_peering_connection" "foo" {
