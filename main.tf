@@ -40,14 +40,14 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = each.value["id"]
 }
 
-resource "aws_route" "igw" {
+resource "aws_route" "app" {
   for_each = lookup(lookup(module.subnets,"app",null),"route",null)
   route_table_id            =each.value["id"]
   destination_cidr_block    = "0.0.0.0/0"
   gateway_id = aws_nat_gateway.nat.id
 }
 
-resource "aws_route" "igw" {
+resource "aws_route" "db" {
   for_each = lookup(lookup(module.subnets,"db",null),"route",null)
   route_table_id            =each.value["id"]
   destination_cidr_block    = "0.0.0.0/0"
