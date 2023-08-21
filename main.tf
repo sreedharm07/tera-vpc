@@ -30,7 +30,7 @@ resource "aws_route" "igw" {
 }
 
 resource "aws_eip" "id" {
-  for_each = lookup(lookup(module.subnets,"public",null),"route",null)
+  for_each = lookup(lookup(module.subnets,"public",null),"subnets",null)
   domain   = "vpc"
 }
 
