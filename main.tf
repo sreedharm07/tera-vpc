@@ -45,7 +45,7 @@ resource "aws_route" "app" {
   route_table_id            =each.value["id"]
   destination_cidr_block    = "0.0.0.0/0"
 #  gateway_id = lookup(lookup(aws_nat_gateway.nat.id,each.value,null),"id",null)
-  gateway_id = lookup(aws_nat_gateway.nat.id,each.value,null)
+  gateway_id = lookup(aws_nat_gateway.nat[each.key],"id",null)
 }
 
 resource "aws_route" "db" {
