@@ -13,9 +13,6 @@ resource "aws_subnet" "main" {
 resource "aws_route_table" "route" {
   for_each = var.subnets
   vpc_id = var.vpc_id
-  route {
-    cidr_block = each.value["cidr"]
-  }
   tags = {
     Name = each.key
   }
