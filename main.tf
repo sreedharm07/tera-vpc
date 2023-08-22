@@ -17,7 +17,7 @@ module "subnets" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
-  tags = merge(local.tags,{name= "${var.env}-igw"})
+  tags = merge(local.tags,{Name= "${var.env}-igw"})
 }
 
 output "subnets" {
@@ -40,7 +40,7 @@ resource "aws_nat_gateway" "example" {
   count = length(local.public_subnets)
   allocation_id = element(aws_eip.lb.*.id,count.index )
   subnet_id     = element(local.public_subnets,count.index )
-  tags   = merge(local.tags,  {name=  "${var.env}-natgate"})
+  tags   = merge(local.tags,  {Name=  "${var.env}-natgate"})
  }
 
 
@@ -56,7 +56,7 @@ resource "aws_vpc_peering_connection" "peer" {
   peer_vpc_id   = aws_vpc.vpc.id
   vpc_id        = var.default_vpc_id
   auto_accept = true
-  tags =merge(local.tags , {name = "${var.env}-peering"})
+  tags =merge(local.tags , {Name = "${var.env}-peering"})
 }
 
 resource "aws_route" "to_default" {
