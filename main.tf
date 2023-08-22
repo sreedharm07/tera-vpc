@@ -1,5 +1,6 @@
 resource "aws_vpc" "vpc" {
   cidr_block = var.cidr
+tags = merge(local.tags, {name= "${var.env}-vpc"})
 }
 
 
@@ -9,15 +10,15 @@ module "subnets" {
   vpc_id   = aws_vpc.vpc.id
   for_each = var.subnets
   subnets  = each.value
+  tags = var.tags
+  env=var.env
 }
 
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
 
-  tags = {
-    Name = "internot"
-  }
+  tags = merge(local.tags,{name=var.env}-igw)
 }
 
 output "subnets" {
@@ -40,10 +41,9 @@ resource "aws_nat_gateway" "example" {
   count = length(local.public_subnets)
   allocation_id = element(aws_eip.lb.*.id,count.index )
   subnet_id     = element(local.public_subnets,count.index )
-  tags          = {
-    Name = "gw NAT"
-  }
-}
+  tags   = merge(local.tags,  {name=  "${var.env}-natgate"})
+ }
+
 
 resource "aws_route" "ngw" {
 count =  length(local.private_subnet_ids)
@@ -57,6 +57,7 @@ resource "aws_vpc_peering_connection" "peer" {
   peer_vpc_id   = aws_vpc.vpc.id
   vpc_id        = var.default_vpc_id
   auto_accept = true
+  tags =merge(local.tags , {name = "${var.env}-peering"})
 }
 
 resource "aws_route" "to_default" {
@@ -70,37 +71,4 @@ resource "aws_route" "to_private_vpc" {
   route_table_id            = var.vpc_default_id
   destination_cidr_block    = var.cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
-}
-
-resource "aws_security_group" "allow_tls" {
-  name        = "allow_tls"
-  description = "Allow TLS inbound traffic"
-  vpc_id      = aws_vpc.vpc.id
-
-  ingress {
-    description      = "TLS from VPC"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
-
-  tags = {
-    Name = "allow_tls"
-  }
-}
-
-resource "aws_instance" "instance" {
-  ami = "ami-03265a0778a880afb"
-  instance_type = "t3.micro"
-vpc_security_group_ids = [aws_security_group.allow_tls.id]
-  subnet_id = local.app_subnets[0]
 }
