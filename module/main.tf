@@ -17,3 +17,10 @@ resource "aws_route_table" "route" {
     Name = each.key
   }
 }
+
+
+resource "aws_route_table_association" "a" {
+  for_each = var.subnets
+  subnet_id      = lookup(lookup(aws_subnet.main,each.value,null),"id",null)
+  route_table_id = lookup(lookup(aws_route_table_association, each.value,null),"id",null)
+}
