@@ -51,3 +51,23 @@ route_table_id         =element(local.private_route_ids,count.index )
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.example.*.id,count.index )
 }
+
+
+resource "aws_vpc_peering_connection" "peer" {
+  peer_vpc_id   = aws_vpc.vpc.id
+  vpc_id        = var.default_vpc_id
+  auto_accept = true
+}
+
+resource "aws_route" "to_default" {
+  count                     = length(local.private_subnet_ids)
+  route_table_id            = element(local.private_route_ids, count.index )
+  destination_cidr_block    = var.default_vpc_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
+
+resource "aws_route" "to_default" {
+  route_table_id            = var.vpc_default_id
+  destination_cidr_block    = var.cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
+}
