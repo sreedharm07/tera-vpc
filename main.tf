@@ -30,7 +30,7 @@ resource "aws_route" "igw" {
 }
 
 resource "aws_eip" "id" {
-count = local.public_subnet_ids
+for_each  = length(local.public_subnet_ids)
 domain   = "vpc"
 }
 
