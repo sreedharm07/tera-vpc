@@ -38,7 +38,7 @@ resource "aws_eip" "lb" {
 
 resource "aws_nat_gateway" "example" {
   for_each      = lookup(lookup(module.subnets, "public", null), "subnets", null)
-  allocation_id = aws_eip.lb.id
+  allocation_id = lookup(lookup(aws_eip.lb,each.value,null ),"id",null)
   subnet_id     = each.value["id"]
   tags          = {
     Name = "gw NAT"
