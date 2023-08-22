@@ -37,7 +37,7 @@ domain   = "vpc"
 resource "aws_nat_gateway" "nat" {
   count =  length(local.public_subnet_ids)
   allocation_id = element(aws_eip.id.*.id,count.index )
-  subnet_id     = element(local.public_subnet_ids,count.index )
+  subnet_id     = element(local.public_subnet_ids,count.index)
 }
 
 resource "aws_route" "ngw" {
@@ -51,4 +51,5 @@ resource "aws_route" "ngw" {
 resource "aws_vpc_peering_connection" "foo" {
   peer_vpc_id   = aws_vpc.vpc.id
   vpc_id        = var.default_vpc
+  auto_accept = true
 }
