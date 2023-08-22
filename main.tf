@@ -53,3 +53,10 @@ resource "aws_vpc_peering_connection" "foo" {
   vpc_id        = var.default_vpc
   auto_accept = true
 }
+
+resource "aws_route" "peering" {
+  count = length(local.private_route_ids)
+  route_table_id            = element(local.private_route_ids,count.index)
+  destination_cidr_block    = "0.0.0.0/0"
+  gateway_id = element(aws_vpc_peering_connection.foo.*.id, count.index )
+}
