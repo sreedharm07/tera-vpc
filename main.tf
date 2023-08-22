@@ -49,5 +49,5 @@ resource "aws_route" "ngw" {
   for_each               = lookup(lookup(module.subnets, "app", null), "route_table", null)
   route_table_id         = each.value["id"]
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = lookup(lookup(aws_nat_gateway.example,each.key,null),"id",null)
+  nat_gateway_id         = lookup(lookup(aws_nat_gateway.example,each.value,null),"id",null)
 }
