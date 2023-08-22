@@ -40,23 +40,26 @@ resource "aws_nat_gateway" "nat" {
   subnet_id     = each.value["id"]
 }
 
-resource "aws_route" "app" {
-  for_each = lookup(lookup(module.subnets,"app",null),"route",null)
-  route_table_id            =each.value["id"]
-  destination_cidr_block    = "0.0.0.0/0"
-#  gateway_id = lookup(lookup(aws_nat_gateway.nat.id,each.value,null),"id",null)
-  gateway_id = lookup(lookup(aws_nat_gateway.nat,each.value,null),"id",null)
-}
+#resource "aws_route" "app" {
+#  for_each = lookup(lookup(module.subnets,"app",null),"route",null)
+#  route_table_id            =each.value["id"]
+#  destination_cidr_block    = "0.0.0.0/0"
+##  gateway_id = lookup(lookup(aws_nat_gateway.nat.id,each.value,null),"id",null)
+#  gateway_id = lookup(lookup(aws_nat_gateway.nat, each.value,null),"id",null)
+#}
+#
+#resource "aws_route" "db" {
+#  for_each = lookup(lookup(module.subnets,"db",null),"route",null)
+#  route_table_id            =each.value["id"]
+#  destination_cidr_block    = "0.0.0.0/0"
+#  gateway_id =  lookup(aws_nat_gateway.nat[each.value],"id",null)
+#}
+#
+#resource "aws_vpc_peering_connection" "foo" {
+#  peer_vpc_id   = aws_vpc.vpc.id
+#  vpc_id        = var.default_vpc
+#}
 
-resource "aws_route" "db" {
-  for_each = lookup(lookup(module.subnets,"db",null),"route",null)
-  route_table_id            =each.value["id"]
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id =  lookup(aws_nat_gateway.nat[each.value],"id",null)
+output "nat----------" {
+  value = aws_nat_gateway.nat
 }
-
-resource "aws_vpc_peering_connection" "foo" {
-  peer_vpc_id   = aws_vpc.vpc.id
-  vpc_id        = var.default_vpc
-}
-
