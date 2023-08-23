@@ -5,4 +5,3 @@ variable "default_vpc_cidr" {}
 variable "vpc_default_id" {}
 variable "tags" {}
 variable "env" {}
-variable "vpc_id" {}
