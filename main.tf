@@ -67,3 +67,6 @@ resource "aws_route" "to_private_vpc" {
   destination_cidr_block    = var.cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.peer.id
 }
+
+
+//
